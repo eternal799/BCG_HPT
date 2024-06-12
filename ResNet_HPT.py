@@ -9,13 +9,14 @@ from sklearn.preprocessing import StandardScaler
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
 from tqdm import tqdm
-from FCN import FCN
+from tsai.models.ResNet import ResNet
+# from FCN import FCN
 # import EarlyStopping
 from pytorchtools import EarlyStopping
 
 from preprocess import bandpass_filter
 
-input_dir = '../hpt/slice_data'
+input_dir = './slice_data'
 bcgData = []
 sum = 0
 labels = []
@@ -55,8 +56,8 @@ y_test = torch.tensor(y_test, dtype=torch.long)
 
 train_dataset = TensorDataset(X_train, y_train)
 test_dataset = TensorDataset(X_test, y_test)
-train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
+test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
 # 检查GPU设备
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -65,7 +66,7 @@ print(f'Using {device} device')
 # 创建模型实例并移动到GPU
 num_classed = len(torch.unique(y_train))
 # print(num_classed)
-model = FCN(1, num_classed).to(device)
+model = ResNet(1, num_classed).to(device)
 # print(model)
 
 # 定义损失函数和优化器

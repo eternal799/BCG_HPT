@@ -9,20 +9,21 @@ from sklearn.preprocessing import StandardScaler
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader
 from tqdm import tqdm
-from FCN import FCN
+from tsai.models.FCN import FCN
+# from FCN import FCN
 # import EarlyStopping
 from pytorchtools import EarlyStopping
 
-# from preprocess import bandpass_filter
+from preprocess import bandpass_filter
 
-input_dir = '../hpt/slice_data'
+input_dir = './slice_data'
 bcgData = []
 sum = 0
 labels = []
 for file_name in os.listdir(input_dir):
     file_path = os.path.join(input_dir, file_name)
     data = np.array(pd.read_csv(file_path, header=None), dtype=np.float32).squeeze()
-    # data = bandpass_filter(data, 0.7, 5, sampling_rate=100)
+    data = bandpass_filter(data, 0.7, 5, sampling_rate=100)
     bcgData.append(data)
     if file_name[0] == 'H':
         labels.append(1)
